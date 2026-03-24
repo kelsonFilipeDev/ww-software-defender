@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ww-postgres
+    environment:
+      POSTGRES_USER: ww_user
+      POSTGRES_PASSWORD: ww_password
+      POSTGRES_DB: ww_defender
+    ports:
+      - "5432:5432"
+    volumes:
+      - ww_postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: ww-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ww_redis_data:/data
+
+volumes:
+  ww_postgres_data:
+  ww_redis_data:
