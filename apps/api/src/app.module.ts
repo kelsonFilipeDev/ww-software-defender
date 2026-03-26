@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
 import { EventModule } from './modules/event/event.module';
+import { RiskModule } from './modules/risk/risk.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { EventModule } from './modules/event/event.module';
       }),
     }),
     EventModule,
+    RiskModule,
   ],
 })
 export class AppModule {}
