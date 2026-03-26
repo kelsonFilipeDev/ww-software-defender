@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
+import { EventModule } from './modules/event/event.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import KeyvRedis from '@keyv/redis';
         ],
       }),
     }),
+    EventModule,
   ],
 })
 export class AppModule {}
