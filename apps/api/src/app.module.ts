@@ -24,7 +24,7 @@ import { StateModule } from './modules/state/state.module';
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: config.get<string>('NODE_ENV') === 'development',
+        synchronize: false,
       }),
     }),
     CacheModule.registerAsync({
