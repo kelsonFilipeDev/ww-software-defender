@@ -5,6 +5,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
 import { EventModule } from './modules/event/event.module';
 import { RiskModule } from './modules/risk/risk.module';
+import { StateModule } from './modules/state/state.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { RiskModule } from './modules/risk/risk.module';
     }),
     EventModule,
     RiskModule,
+    StateModule,
   ],
 })
 export class AppModule {}
