@@ -6,7 +6,9 @@ import { EntityState } from './enums/entity-state.enum';
 export class StateService {
   constructor(private readonly riskService: RiskService) {}
 
-  async getState(entityId: string): Promise<{ entityId: string; score: number; state: EntityState }> {
+  async getState(
+    entityId: string,
+  ): Promise<{ entityId: string; score: number; state: EntityState }> {
     const score = await this.riskService.calculate(entityId);
     const state = this.resolveState(score);
     return { entityId, score, state };
