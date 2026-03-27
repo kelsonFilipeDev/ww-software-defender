@@ -6,6 +6,7 @@ import KeyvRedis from '@keyv/redis';
 import { EventModule } from './modules/event/event.module';
 import { RiskModule } from './modules/risk/risk.module';
 import { StateModule } from './modules/state/state.module';
+import { DecisionModule } from './modules/decision/decision.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { StateModule } from './modules/state/state.module';
     EventModule,
     RiskModule,
     StateModule,
+    DecisionModule,
   ],
 })
 export class AppModule {}
