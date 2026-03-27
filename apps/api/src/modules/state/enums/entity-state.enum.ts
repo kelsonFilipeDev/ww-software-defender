@@ -1,0 +1,7 @@
+export enum EntityState {
+  NORMAL = 'NORMAL',
+  SUSPEITO = 'SUSPEITO',
+  ALERTA = 'ALERTA',
+  CRITICO = 'CRITICO',
+  BLOQUEADO = 'BLOQUEADO',
+}
