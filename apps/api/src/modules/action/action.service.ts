@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DecisionService } from '../decision/decision.service';
 import { DecisionAction } from '../decision/enums/decision-action.enum';
+import { AuditService } from '../audit/audit.service';
 import { ActionStatus } from './enums/action-status.enum';
 import { ActionResultDto } from './dto/action-result.dto';
 
@@ -8,21 +9,31 @@ import { ActionResultDto } from './dto/action-result.dto';
 export class ActionService {
   private readonly logger = new Logger(ActionService.name);
 
-  constructor(private readonly decisionService: DecisionService) {}
+  constructor(
+    private readonly decisionService: DecisionService,
+    private readonly auditService: AuditService,
+  ) {}
 
   async execute(entityId: string): Promise<ActionResultDto> {
-    const { action } = await this.decisionService.decide(entityId);
+    const { score, state, action } =
+      await this.decisionService.decide(entityId);
 
-    const result: ActionResultDto = {
+    this.applyAction(entityId, action);
+
+    await this.auditService.log({
+      entityId,
+      score,
+      state,
+      action,
+      status: ActionStatus.EXECUTED,
+    });
+
+    return {
       entityId,
       action,
       status: ActionStatus.EXECUTED,
       executedAt: new Date(),
     };
-
-    this.applyAction(entityId, action);
-
-    return result;
   }
 
   private applyAction(entityId: string, action: DecisionAction): void {

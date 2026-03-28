@@ -8,6 +8,7 @@ import { RiskModule } from './modules/risk/risk.module';
 import { StateModule } from './modules/state/state.module';
 import { DecisionModule } from './modules/decision/decision.module';
 import { ActionModule } from './modules/action/action.module';
+import { AuditModule } from './modules/audit/audit.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ActionModule } from './modules/action/action.module';
     StateModule,
     DecisionModule,
     ActionModule,
+    AuditModule,
   ],
 })
 export class AppModule {}
