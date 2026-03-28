@@ -7,6 +7,7 @@ import { EventModule } from './modules/event/event.module';
 import { RiskModule } from './modules/risk/risk.module';
 import { StateModule } from './modules/state/state.module';
 import { DecisionModule } from './modules/decision/decision.module';
+import { ActionModule } from './modules/action/action.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { DecisionModule } from './modules/decision/decision.module';
     RiskModule,
     StateModule,
     DecisionModule,
+    ActionModule,
   ],
 })
 export class AppModule {}
