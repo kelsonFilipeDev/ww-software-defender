@@ -1,6 +1,8 @@
-import { Controller, Post, Param } from '@nestjs/common';
+import { Controller, Post, Param, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ActionService } from './action.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('action')
 export class ActionController {
   constructor(private readonly actionService: ActionService) {}

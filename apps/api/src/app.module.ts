@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ThrottlerModule } from '@nestjs/throttler';
 import KeyvRedis from '@keyv/redis';
 import { EventModule } from './modules/event/event.module';
 import { RiskModule } from './modules/risk/risk.module';
@@ -9,6 +10,7 @@ import { StateModule } from './modules/state/state.module';
 import { DecisionModule } from './modules/decision/decision.module';
 import { ActionModule } from './modules/action/action.module';
 import { AuditModule } from './modules/audit/audit.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +18,12 @@ import { AuditModule } from './modules/audit/audit.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 30,
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -48,6 +56,7 @@ import { AuditModule } from './modules/audit/audit.module';
     DecisionModule,
     ActionModule,
     AuditModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
