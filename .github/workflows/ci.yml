@@ -74,7 +74,8 @@ jobs:
         run: npm install
 
       - name: Run migrations
-        run: cd apps/api && npm run migration:run
+        working-directory: apps/api
+        run: npm run migration:run
         env:
           PORT: 3001
           NODE_ENV: test
@@ -89,7 +90,8 @@ jobs:
           JWT_EXPIRES_IN: 24h
 
       - name: E2E tests
-        run: cd apps/api && npm run test:e2e
+        working-directory: apps/api
+        run: npm run test:e2e
         env:
           PORT: 3001
           NODE_ENV: test
