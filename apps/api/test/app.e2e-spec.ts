@@ -3,13 +3,36 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-interface TokenResponse { accessToken: string; }
-interface EventResponse { id: string; type: string; entityId: string; }
-interface RiskResponse { entityId: string; score: number; }
-interface StateResponse { entityId: string; state: string; }
-interface DecisionResponse { entityId: string; action: string; }
-interface ActionResponse { entityId: string; action: string; status: string; executedAt: string; }
-interface AuditResponse { entityId: string; }
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+interface TokenResponse {
+  accessToken: string;
+}
+interface EventResponse {
+  id: string;
+  type: string;
+  entityId: string;
+}
+interface RiskResponse {
+  entityId: string;
+  score: number;
+}
+interface StateResponse {
+  entityId: string;
+  state: string;
+}
+interface DecisionResponse {
+  entityId: string;
+  action: string;
+}
+interface ActionResponse {
+  entityId: string;
+  action: string;
+  status: string;
+  executedAt: string;
+}
+interface AuditResponse {
+  entityId: string;
+}
 
 describe('WW Defender — E2E Flow', () => {
   let app: INestApplication;
@@ -22,11 +45,19 @@ describe('WW Defender — E2E Flow', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api');
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
     await app.init();
   });
 
-  afterAll(async () => { await app.close(); });
+  afterAll(async () => {
+    await app.close();
+  });
 
   describe('POST /api/auth/token', () => {
     it('should generate a JWT token', async () => {
@@ -59,7 +90,11 @@ describe('WW Defender — E2E Flow', () => {
       const res = await request(app.getHttpServer())
         .post('/api/events')
         .set('Authorization', `Bearer ${token}`)
-        .send({ type: 'LoginFailed', entityId: 'e2e-user', payload: { ip: '10.0.0.1' } })
+        .send({
+          type: 'LoginFailed',
+          entityId: 'e2e-user',
+          payload: { ip: '10.0.0.1' },
+        })
         .expect(201);
       const body = res.body as EventResponse;
       expect(body.id).toBeDefined();
@@ -94,7 +129,13 @@ describe('WW Defender — E2E Flow', () => {
         .expect(200);
       const body = res.body as StateResponse;
       expect(body.entityId).toBe('e2e-user');
-      expect(['NORMAL', 'SUSPEITO', 'ALERTA', 'CRITICO', 'BLOQUEADO']).toContain(body.state);
+      expect([
+        'NORMAL',
+        'SUSPEITO',
+        'ALERTA',
+        'CRITICO',
+        'BLOQUEADO',
+      ]).toContain(body.state);
     });
   });
 
@@ -105,7 +146,9 @@ describe('WW Defender — E2E Flow', () => {
         .expect(200);
       const body = res.body as DecisionResponse;
       expect(body.entityId).toBe('e2e-user');
-      expect(['ALLOW', 'THROTTLE', 'CHALLENGE', 'BLOCK']).toContain(body.action);
+      expect(['ALLOW', 'THROTTLE', 'CHALLENGE', 'BLOCK']).toContain(
+        body.action,
+      );
     });
   });
 
@@ -131,9 +174,7 @@ describe('WW Defender — E2E Flow', () => {
 
   describe('GET /api/audit/:entityId', () => {
     it('should reject request without token', async () => {
-      await request(app.getHttpServer())
-        .get('/api/audit/e2e-user')
-        .expect(401);
+      await request(app.getHttpServer()).get('/api/audit/e2e-user').expect(401);
     });
 
     it('should return audit logs for entity', async () => {
