@@ -1,159 +1,65 @@
-# Turborepo starter
+# WW Software Defender
 
-This Turborepo starter is maintained by the Turborepo core team.
+**Sistema de Monitorização Forense Inteligente**
 
-## Using this example
+Motor de decisão de segurança que analisa eventos em tempo real, calcula risco comportamental, define estado, toma decisões automáticas e executa ações defensivas — tudo auditável e rastreável.
 
-Run the following command:
+Em vez de apenas registar alertas, o WW **fecha o ciclo completo**: deteta → avalia → decide → age → audita. Sem intervenção humana constante.
 
-```sh
-npx create-turbo@latest
-```
+---
 
-## What's inside?
+## Recursos e Demonstração
 
-This Turborepo includes the following packages/apps:
+### Funcionalidades principais
 
-### Apps and Packages
+- **Motor completo de decisão** — Evento → Risco → Estado → Decisão → Ação
+- **Cálculo de Risk Score** (0-100) com regras comportamentais
+- **Estados automáticos**: `NORMAL` | `SUSPEITO` | `ALERTA` | `CRÍTICO` | `BLOQUEADO`
+- **Decisões defensivas**: `ALLOW` | `THROTTLE` | `CHALLENGE` | `BLOCK`
+- **Execução automática de ações** com auditoria forense
+- **API REST autenticada** com JWT
+- **Dashboard em tempo real** com KPIs, timeline, gráficos e logs
+- **Auditoria completa** — rastreabilidade total de todas as decisões
+- **Pipeline CI/CD profissional** com testes unitários e E2E
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Demonstração
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+![Dashboard Overview](screenshots/dashboard.png)
+*Dashboard principal com KPIs, timeline de risco e logs em tempo real*
 
-### Utilities
+![Events Stream](screenshots/events-stream.png)
+*Stream de eventos com filtro e auto-refresh*
 
-This Turborepo has some additional tools already setup for you:
+![Audit Trail](screenshots/audit-trail.png)
+*Trail forense completo com rastreabilidade*
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
 
-### Build
+## Guia de Início Rápido
 
-To build all apps and packages, run the following command:
+### Pré-requisitos
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+- Git
+- Node.js (v20 ou superior)
+- Docker e Docker Compose
+- PostgreSQL (via Docker)
+- Redis (via Docker)
 
-```sh
-cd my-turborepo
-turbo build
-```
+### Instalação
 
-Without global `turbo`, use your package manager:
+```bash
+# 1. Clona o repositório
+git clone https://github.com/kelsonFilipeDev/ww-software-defender.git
+cd ww-software-defender
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+# 2. Copia as variáveis de ambiente
+cp .env.example .env
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+# 3. Sobe os serviços (PostgreSQL + Redis)
+docker compose up -d
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+# 4. Instala dependências
+npm install
 
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+# 5. Inicia o projeto em modo desenvolvimento
+npm run dev
