@@ -49,10 +49,10 @@ git clone https://github.com/kelsonFilipeDev/ww-software-defender.git
 cd ww-software-defender
 
 # 2. Copia as variáveis de ambiente
-cp .env.example .env
+cp apps/api/.env.example apps/api/.env
 
 # 3. Sobe os serviços (PostgreSQL + Redis)
-docker compose up -d
+docker compose -f infra/docker/docker-compose.yml up -d
 
 # 4. Instala dependências
 npm install
