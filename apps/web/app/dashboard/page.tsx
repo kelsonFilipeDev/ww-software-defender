@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, animate } from 'framer-motion';
 import PieChart from '../../src/components/PieChart';
 import ScoreTimeline from '../../src/components/ScoreTimeline';
@@ -64,6 +65,7 @@ export default function DashboardPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(REFRESH_INTERVAL / 1000);
+  const router = useRouter();
 
   const load = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -104,7 +106,7 @@ export default function DashboardPage() {
 
   const latestPerEntity = Object.values(
     logs.reduce<Record<string, AuditLog>>((acc, log) => {
-      if (!acc[log.entityId] || new Date(log.createdAt) > new Date(acc[log.entityId].createdAt)) {
+      if (!acc[log.entityId] || new Date(log.createdAt) > new Date(acc[log.entityId]!.createdAt)) {
         acc[log.entityId] = log;
       }
       return acc;
@@ -241,7 +243,12 @@ export default function DashboardPage() {
           <tbody>
             {logs.slice(0, 10).map((log) => (
               <tr key={log.id}>
-                <td style={{ color: 'var(--text-primary)', fontSize: '0.9rem' }}>{log.entityId}</td>
+                <td
+                  style={{ color: 'var(--red-primary)', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
+                  onClick={() => router.push(`/entity/${log.entityId}`)}
+                >
+                  {log.entityId}
+                </td>
                 <td style={{ color: log.score > 60 ? 'var(--red-bright)' : log.score > 20 ? 'var(--yellow)' : 'var(--green)', fontWeight: 700, fontSize: '0.9rem' }}>{log.score}</td>
                 <td><span className={`badge badge-${log.state.toLowerCase()}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>{log.state}</span></td>
                 <td><span className={`badge badge-${log.action.toLowerCase()}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>{log.action}</span></td>
