@@ -173,15 +173,15 @@ export default function DashboardPage() {
       {/* Metric Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
         {[
-          { label: 'ENTIDADES', value: totalEntities, color: 'var(--text-primary)', sub: 'monitoradas' },
-          { label: 'SUSPEITAS', value: suspicious, color: 'var(--yellow)', sub: 'THROTTLE activo' },
-          { label: 'EM ALERTA', value: alerts, color: alerts > 0 ? 'var(--orange)' : 'var(--green)', sub: alerts > 0 ? 'CHALLENGE/BLOCK' : 'sistema seguro' },
-          { label: 'BLOQUEADAS', value: blocked, color: 'var(--red-bright)', sub: 'acesso negado' },
+          { label: 'ENTITIES', value: totalEntities, color: 'var(--text-primary)', sub: 'monitored' },
+          { label: 'SUSPICIOUS', value: suspicious, color: 'var(--yellow)', sub: 'THROTTLE active' },
+          { label: 'ON ALERT', value: alerts, color: alerts > 0 ? 'var(--orange)' : 'var(--green)', sub: alerts > 0 ? 'CHALLENGE/BLOCK' : 'system secure' },
+          { label: 'BLOCKED', value: blocked, color: 'var(--red-bright)', sub: 'access denied' },
         ].map((metric, i) => (
           <motion.div key={metric.label} className="card" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{metric.label}</div>
             <AnimatedNumber value={metric.value} color={metric.color} />
-            <div style={{ fontSize: '0.7rem', color: metric.sub === 'sistema seguro' ? 'var(--green)' : 'var(--text-dim)', marginTop: '0.5rem', letterSpacing: '0.05em' }}>{metric.sub}</div>
+            <div style={{ fontSize: '0.7rem', color: metric.sub === 'system secure' ? 'var(--green)' : 'var(--text-dim)', marginTop: '0.5rem', letterSpacing: '0.05em' }}>{metric.sub}</div>
           </motion.div>
         ))}
       </div>
@@ -190,14 +190,14 @@ export default function DashboardPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
         <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem' }}>
           <div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>ENTIDADES NORMAIS</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>NORMAL ENTITIES</div>
             <div style={{ fontSize: '1.5rem', color: 'var(--green)', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif' }}>{normal}</div>
           </div>
           <div style={{ fontSize: '2rem', color: 'var(--green)', opacity: 0.3 }}>●</div>
         </motion.div>
         <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem' }}>
           <div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>TOTAL DE EVENTOS</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>TOTAL EVENTS</div>
             <div style={{ fontSize: '1.5rem', color: 'var(--text-primary)', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif' }}>{totalEvents}</div>
           </div>
           <div style={{ fontSize: '2rem', color: 'var(--red-primary)', opacity: 0.3 }}>◈</div>
@@ -207,22 +207,22 @@ export default function DashboardPage() {
       {/* Charts */}
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
         <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> RISK SCORE — ÚLTIMAS ACÇÕES'}</div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>Score de risco por entidade auditada (0–100)</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> RISK SCORE — LATEST ACTIONS'}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>Risk score per audited entity (0–100)</div>
           <ScoreTimeline logs={latestPerEntity.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())} />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: 'var(--text-dim)', marginTop: '0.5rem' }}>
             <span>NORMAL (0)</span>
-            <span style={{ color: 'var(--yellow)' }}>SUSPEITO (21)</span>
-            <span style={{ color: 'var(--orange)' }}>ALERTA (41)</span>
-            <span style={{ color: 'var(--red-bright)' }}>CRÍTICO (81)</span>
+            <span style={{ color: 'var(--yellow)' }}>SUSPICIOUS (21)</span>
+            <span style={{ color: 'var(--orange)' }}>ALERT (41)</span>
+            <span style={{ color: 'var(--red-bright)' }}>CRITICAL (81)</span>
           </div>
         </motion.div>
         <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> ESTADOS'}</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> STATES'}</div>
           <PieChart data={stateData} />
         </motion.div>
         <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> ACÇÕES'}</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> ACTIONS'}</div>
           <PieChart data={actionData} />
         </motion.div>
       </div>
@@ -233,26 +233,34 @@ export default function DashboardPage() {
         <table>
           <thead>
             <tr>
-              <th style={{ fontSize: '0.85rem' }}>ENTIDADE</th>
+              <th style={{ fontSize: '0.85rem' }}>ENTITY</th>
               <th style={{ fontSize: '0.85rem' }}>SCORE</th>
-              <th style={{ fontSize: '0.85rem' }}>ESTADO</th>
-              <th style={{ fontSize: '0.85rem' }}>ACÇÃO</th>
+              <th style={{ fontSize: '0.85rem' }}>STATE</th>
+              <th style={{ fontSize: '0.85rem' }}>ACTION</th>
               <th style={{ fontSize: '0.85rem' }}>TIMESTAMP</th>
+              <th style={{ fontSize: '0.85rem' }}></th>
             </tr>
           </thead>
           <tbody>
             {logs.slice(0, 10).map((log) => (
               <tr key={log.id}>
-                <td
-                  style={{ color: 'var(--red-primary)', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
-                  onClick={() => router.push(`/entity/${log.entityId}`)}
-                >
-                  {log.entityId}
-                </td>
+                <td style={{ color: 'var(--text-primary)', fontSize: '0.9rem' }}>{log.entityId}</td>
                 <td style={{ color: log.score > 60 ? 'var(--red-bright)' : log.score > 20 ? 'var(--yellow)' : 'var(--green)', fontWeight: 700, fontSize: '0.9rem' }}>{log.score}</td>
                 <td><span className={`badge badge-${log.state.toLowerCase()}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>{log.state}</span></td>
                 <td><span className={`badge badge-${log.action.toLowerCase()}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>{log.action}</span></td>
                 <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{new Date(log.createdAt).toLocaleString('pt')}</td>
+                <td style={{ textAlign: 'center' }}>
+                  <button
+                    onClick={() => router.push(`/entity/${log.entityId}`)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '0.25rem', lineHeight: 0 }}
+                    title="View entity"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
