@@ -13,7 +13,7 @@ export default function RootLayout({
   const [booted, setBooted] = useState(false);
 
   return (
-    <html lang="pt">
+    <html lang="en">
       <body style={{ display: 'flex' }}>
         {!booted && <BootScreen onComplete={() => setBooted(true)} />}
         <Sidebar />
