@@ -85,7 +85,7 @@ export default function EntityDrillDownPage() {
       setState(stateData);
       setError('');
     } catch {
-      setError('ERRO: Falha ao carregar dados da entidade.');
+      setError('ERROR: Failed to load entity data.');
     } finally {
       setLoading(false);
     }
@@ -124,10 +124,10 @@ export default function EntityDrillDownPage() {
         </h1>
       </motion.div>
 
-      {/* Estado e Score */}
+      {/* State & Score */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
         <motion.div className="card" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>ESTADO ACTUAL</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>CURRENT STATE</div>
           <div style={{ fontSize: '2rem', color: stateColor, fontWeight: 700, fontFamily: 'Rajdhani, sans-serif' }}>{currentState}</div>
         </motion.div>
         <motion.div className="card" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
@@ -135,21 +135,21 @@ export default function EntityDrillDownPage() {
           <div style={{ fontSize: '2rem', color: currentScore > 60 ? 'var(--red-bright)' : currentScore > 20 ? 'var(--yellow)' : 'var(--green)', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif' }}>{currentScore}</div>
         </motion.div>
         <motion.div className="card" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>TOTAL DE EVENTOS</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>TOTAL EVENTS</div>
           <div style={{ fontSize: '2rem', color: 'var(--text-primary)', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif' }}>{events.length}</div>
         </motion.div>
       </div>
 
-      {/* Timeline de Eventos */}
+      {/* Event Timeline */}
       <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} style={{ marginBottom: '2rem' }}>
         <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1.25rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> EVENT TIMELINE'}</div>
         {events.length === 0 ? (
-          <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>Sem eventos registados.</div>
+          <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No events recorded.</div>
         ) : (
           <table>
             <thead>
               <tr>
-                <th style={{ fontSize: '0.85rem' }}>TIPO</th>
+                <th style={{ fontSize: '0.85rem' }}>TYPE</th>
                 <th style={{ fontSize: '0.85rem' }}>IP</th>
                 <th style={{ fontSize: '0.85rem' }}>TIMESTAMP</th>
               </tr>
@@ -159,7 +159,7 @@ export default function EntityDrillDownPage() {
                 <tr key={ev.id}>
                   <td style={{ color: 'var(--red-primary)', fontWeight: 600, fontSize: '0.9rem' }}>{ev.type}</td>
                   <td style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{ev.ip}</td>
-                  <td style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>{new Date(ev.createdAt).toLocaleString('pt')}</td>
+                  <td style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>{new Date(ev.createdAt).toLocaleString('en')}</td>
                 </tr>
               ))}
             </tbody>
@@ -167,18 +167,18 @@ export default function EntityDrillDownPage() {
         )}
       </motion.div>
 
-      {/* Histórico de Decisões */}
+      {/* Decision History */}
       <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
         <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1.25rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{'> DECISION HISTORY'}</div>
         {auditLogs.length === 0 ? (
-          <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>Sem decisões registadas.</div>
+          <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No decisions recorded.</div>
         ) : (
           <table>
             <thead>
               <tr>
                 <th style={{ fontSize: '0.85rem' }}>SCORE</th>
-                <th style={{ fontSize: '0.85rem' }}>ESTADO</th>
-                <th style={{ fontSize: '0.85rem' }}>ACÇÃO</th>
+                <th style={{ fontSize: '0.85rem' }}>STATE</th>
+                <th style={{ fontSize: '0.85rem' }}>ACTION</th>
                 <th style={{ fontSize: '0.85rem' }}>STATUS</th>
                 <th style={{ fontSize: '0.85rem' }}>TIMESTAMP</th>
               </tr>
@@ -190,7 +190,7 @@ export default function EntityDrillDownPage() {
                   <td><span className={`badge badge-${log.state.toLowerCase()}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>{log.state}</span></td>
                   <td><span style={{ color: ACTION_COLORS[log.action] ?? 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem' }}>{log.action}</span></td>
                   <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{log.status}</td>
-                  <td style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>{new Date(log.createdAt).toLocaleString('pt')}</td>
+                  <td style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>{new Date(log.createdAt).toLocaleString('en')}</td>
                 </tr>
               ))}
             </tbody>
