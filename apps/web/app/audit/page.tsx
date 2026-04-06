@@ -37,7 +37,7 @@ export default function AuditPage() {
       setLastUpdated(new Date());
       setError('');
     } catch {
-      setError('ERRO: Falha na ligação ao servidor.');
+      setError('ERROR: Failed to connect to server.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -99,7 +99,7 @@ export default function AuditPage() {
           )}
           {lastUpdated && (
             <div style={{ color: 'var(--text-dim)', letterSpacing: '0.05em' }}>
-              LAST SYNC: {lastUpdated.toLocaleTimeString('pt')}
+              LAST SYNC: {lastUpdated.toLocaleTimeString('en')}
             </div>
           )}
           <div style={{ color: 'var(--text-dim)', marginTop: '0.25rem' }}>
@@ -111,10 +111,10 @@ export default function AuditPage() {
       {/* Summary cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
         {[
-          { label: 'TOTAL DECISÕES', value: logs.length, color: 'var(--text-primary)' },
-          { label: 'BLOQUEADAS', value: logs.filter((l) => l.action === 'BLOCK').length, color: 'var(--risk-blocked)' },
+          { label: 'TOTAL DECISIONS', value: logs.length, color: 'var(--text-primary)' },
+          { label: 'BLOCKED', value: logs.filter((l) => l.action === 'BLOCK').length, color: 'var(--risk-blocked)' },
           { label: 'THROTTLED', value: logs.filter((l) => l.action === 'THROTTLE').length, color: 'var(--risk-medium)' },
-          { label: 'PERMITIDAS', value: logs.filter((l) => l.action === 'ALLOW').length, color: 'var(--risk-low)' },
+          { label: 'ALLOWED', value: logs.filter((l) => l.action === 'ALLOW').length, color: 'var(--risk-low)' },
         ].map((metric, i) => (
           <motion.div key={metric.label} className="card" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', letterSpacing: '0.15em', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{metric.label}</div>
@@ -131,7 +131,7 @@ export default function AuditPage() {
             type="text"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder="entidade, estado ou acção..."
+            placeholder="entity, state or action..."
             style={{
               background: 'transparent',
               border: 'none',
@@ -142,22 +142,22 @@ export default function AuditPage() {
               flex: 1,
             }}
           />
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{filtered.length} resultados</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{filtered.length} results</span>
         </div>
       </motion.div>
 
       {/* Audit table */}
       <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
         <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1.25rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>
-          {'> '}{filtered.length} REGISTOS DE AUDITORIA
+          {'> '}{filtered.length} AUDIT RECORDS
         </div>
         <table>
           <thead>
             <tr>
-              <th style={{ fontSize: '0.85rem' }}>ENTIDADE</th>
+              <th style={{ fontSize: '0.85rem' }}>ENTITY</th>
               <th style={{ fontSize: '0.85rem' }}>SCORE</th>
-              <th style={{ fontSize: '0.85rem' }}>ESTADO</th>
-              <th style={{ fontSize: '0.85rem' }}>ACÇÃO</th>
+              <th style={{ fontSize: '0.85rem' }}>STATE</th>
+              <th style={{ fontSize: '0.85rem' }}>ACTION</th>
               <th style={{ fontSize: '0.85rem' }}>STATUS</th>
               <th style={{ fontSize: '0.85rem' }}>TIMESTAMP</th>
             </tr>
@@ -175,7 +175,7 @@ export default function AuditPage() {
                 <td><span className={`badge badge-${log.state.toLowerCase()}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>{log.state}</span></td>
                 <td><span className={`badge badge-${log.action.toLowerCase()}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>{log.action}</span></td>
                 <td style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', letterSpacing: '0.05em' }}>{log.status}</td>
-                <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{new Date(log.createdAt).toLocaleString('pt')}</td>
+                <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{new Date(log.createdAt).toLocaleString('en')}</td>
               </motion.tr>
             ))}
           </tbody>

@@ -42,7 +42,7 @@ export default function EventsPage() {
       setLastUpdated(new Date());
       setError('');
     } catch {
-      setError('ERRO: Falha na ligação ao servidor.');
+      setError('ERROR: Failed to connect to server.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -101,7 +101,7 @@ export default function EventsPage() {
           )}
           {lastUpdated && (
             <div style={{ color: 'var(--text-dim)', letterSpacing: '0.05em' }}>
-              LAST SYNC: {lastUpdated.toLocaleTimeString('pt')}
+              LAST SYNC: {lastUpdated.toLocaleTimeString('en')}
             </div>
           )}
           <div style={{ color: 'var(--text-dim)', marginTop: '0.25rem' }}>
@@ -128,7 +128,7 @@ export default function EventsPage() {
             type="text"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder="entidade ou tipo..."
+            placeholder="entity or type..."
             style={{
               background: 'transparent',
               border: 'none',
@@ -139,20 +139,20 @@ export default function EventsPage() {
               flex: 1,
             }}
           />
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{filtered.length} resultados</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{filtered.length} results</span>
         </div>
       </motion.div>
 
       {/* Events table */}
       <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
         <div style={{ fontSize: '0.8rem', color: 'var(--red-primary)', letterSpacing: '0.15em', marginBottom: '1.25rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>
-          {'> '}{filtered.length} EVENTOS REGISTADOS
+          {'> '}{filtered.length} EVENTS RECORDED
         </div>
         <table>
           <thead>
             <tr>
-              <th style={{ fontSize: '0.85rem' }}>TIPO</th>
-              <th style={{ fontSize: '0.85rem' }}>ENTIDADE</th>
+              <th style={{ fontSize: '0.85rem' }}>TYPE</th>
+              <th style={{ fontSize: '0.85rem' }}>ENTITY</th>
               <th style={{ fontSize: '0.85rem' }}>PAYLOAD</th>
               <th style={{ fontSize: '0.85rem' }}>TIMESTAMP</th>
             </tr>
@@ -175,7 +175,7 @@ export default function EventsPage() {
                   {JSON.stringify(event.payload)}
                 </td>
                 <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                  {new Date(event.createdAt).toLocaleString('pt')}
+                  {new Date(event.createdAt).toLocaleString('en')}
                 </td>
               </motion.tr>
             ))}
