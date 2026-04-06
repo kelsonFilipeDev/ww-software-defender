@@ -3,13 +3,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { ApiKeyStrategy } from './strategies/api-key.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CombinedAuthGuard } from '../../shared/guards/combined-auth.guard';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { ApiKeyModule } from '../api-keys/api-key.module';
 
 @Module({
   imports: [
     PassportModule,
+    ApiKeyModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -22,7 +26,13 @@ import { AuthController } from './auth.controller';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard],
-  exports: [JwtAuthGuard],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    ApiKeyStrategy,
+    JwtAuthGuard,
+    CombinedAuthGuard,
+  ],
+  exports: [JwtAuthGuard, CombinedAuthGuard],
 })
 export class AuthModule {}
