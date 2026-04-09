@@ -1,159 +1,132 @@
-# Turborepo starter
+# WW Software Defender
 
-This Turborepo starter is maintained by the Turborepo core team.
+**Sistema de Monitorização Forense Inteligente**
 
-## Using this example
+O WW Software Defender é um motor de decisão de segurança que analisa eventos em tempo real, calcula risco comportamental, define o estado da entidade, toma decisões automáticas e executa ações defensivas — tudo completamente auditável e rastreável.
 
-Run the following command:
+Em vez de apenas registar alertas, o sistema **fecha o ciclo completo**: deteta → avalia → decide → age → audita, sem depender de intervenção humana constante.
 
-```sh
-npx create-turbo@latest
+## Recursos e Demonstração
+
+### Funcionalidades principais
+
+- Motor completo de decisão — Evento → Risco → Estado → Decisão → Ação
+- Cálculo automático de Risk Score (0-100) com regras comportamentais
+- Estados automáticos da entidade: `NORMAL` | `SUSPEITO` | `ALERTA` | `CRÍTICO` | `BLOQUEADO`
+- Decisões defensivas automáticas: `ALLOW` | `THROTTLE` | `CHALLENGE` | `BLOCK`
+- Execução imediata de ações com auditoria forense
+- API REST totalmente autenticada com JWT
+- Dashboard em tempo real com KPIs, timeline de risco, gráficos e logs
+- Auditoria completa — rastreabilidade total de todas as decisões
+- Pipeline CI/CD profissional com testes unitários e E2E
+
+### Demonstração
+
+![Dashboard Overview](screenshots/dashboard.png)  
+*Dashboard principal com KPIs, timeline de risco e logs em tempo real*
+
+![Events Stream](screenshots/events-stream.png)  
+*Stream de eventos com filtro e auto-refresh a cada 30 segundos*
+
+![Audit Trail](screenshots/audit-trail.png)  
+*Trail forense completo com rastreabilidade total das decisões*
+
+## Guia de Início Rápido (Getting Started)
+
+### Pré-requisitos
+
+- Git
+- Node.js (v20 ou superior)
+- Docker e Docker Compose
+- PostgreSQL (via Docker)
+- Redis (via Docker)
+
+### Instalação
+
+```bash
+# 1. Clona o repositório
+git clone https://github.com/kelsonFilipeDev/ww-software-defender.git
+cd ww-software-defender
+
+# 2. Copia as variáveis de ambiente
+cp .env.example .env
+
+# 3. Sobe os serviços (PostgreSQL + Redis)
+docker compose up -d
+
+# 4. Instala dependências
+npm install
+
+# 5. Inicia o projeto em modo desenvolvimento
+npm run dev
 ```
 
-## What's inside?
+### Como usar
+Após iniciar o projeto:
 
-This Turborepo includes the following packages/apps:
+Dashboard → acede a http://localhost:3000
 
-### Apps and Packages
+API → disponível em http://localhost:3001
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+# Exemplo prático — Enviar um evento para o sistema:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+```bash
+curl -X POST http://localhost:3001/api/events \
+  -H "Authorization: Bearer SEU_TOKEN_JWT" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "entityId": "user-123",
+    "type": "LOGIN_FAILED",
+    "ip": "192.168.1.100",
+    "metadata": {
+      "userAgent": "Mozilla/5.0"
+    }
+  }'
+  ```
+## Stack Tecnológica
 
-### Utilities
+- **Monorepo**: Turborepo + npm  
+- **Backend**: NestJS + TypeORM + PostgreSQL  
+- **Cache / Rate Limiting**: Redis + Keyv  
+- **Auth**: JWT + Passport  
+- **Frontend**: Next.js 16 + Framer Motion  
+- **Infra**: Docker Compose  
+- **CI/CD**: GitHub Actions  
+- **Qualidade**: ESLint + Husky + Commitlint + 31 testes unitários + 12 testes E2E
 
-This Turborepo has some additional tools already setup for you:
+<div align="center">
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?logo=nestjs&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white)
+![Turborepo](https://img.shields.io/badge/Turborepo-000000?logo=turborepo&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
-### Build
+</div>
 
-To build all apps and packages, run the following command:
+## Informações Complementares
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+### Contribuição
 
-```sh
-cd my-turborepo
-turbo build
-```
+Contribuições são bem-vindas e incentivadas!
 
-Without global `turbo`, use your package manager:
+1. Faz fork do repositório
+2. Cria uma branch com Conventional Commits (`feat/`, `fix/`, `docs/`, etc.)
+3. Desenvolve a funcionalidade ou correção
+4. Abre um Pull Request pequeno e bem documentado
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+Todas as contribuições devem seguir o padrão de Clean Code, KISS e os manifestos do projeto.
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### Licença
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Este projeto está licenciado sob a **MIT License**.  
+Podes utilizar, modificar e distribuir livremente, desde que mantenhas o aviso de copyright.  
+Ver o ficheiro [LICENSE](LICENSE) para mais detalhes.
 
-```sh
-turbo build --filter=docs
-```
+### Contato
 
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+**Kelson Filipe**  
+GitHub: [@kelsonFilipeDev](https://github.com/kelsonFilipeDev)  
+Email: kelsonfilipedev@gmail.com

@@ -31,7 +31,12 @@ describe('ApiKeyService', () => {
 
   it('should create an api key and return the raw key', async () => {
     const dto = { clientId: 'client-123' };
-    const saved = { id: 'uuid-1', key: 'hashed', clientId: 'client-123', active: true };
+    const saved = {
+      id: 'uuid-1',
+      key: 'hashed',
+      clientId: 'client-123',
+      active: true,
+    };
 
     mockApiKeyRepository.create.mockReturnValue(saved);
     mockApiKeyRepository.save.mockResolvedValue(saved);
@@ -71,12 +76,17 @@ describe('ApiKeyService', () => {
 
     await service.revoke('uuid-1');
 
-    expect(mockApiKeyRepository.save).toHaveBeenCalledWith({ ...apiKey, active: false });
+    expect(mockApiKeyRepository.save).toHaveBeenCalledWith({
+      ...apiKey,
+      active: false,
+    });
   });
 
   it('should throw NotFoundException when revoking a non-existent key', async () => {
     mockApiKeyRepository.findOne.mockResolvedValue(null);
 
-    await expect(service.revoke('non-existent-id')).rejects.toThrow(NotFoundException);
+    await expect(service.revoke('non-existent-id')).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });
