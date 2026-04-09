@@ -89,17 +89,3 @@ jobs:
           REDIS_PORT: 6379
           JWT_SECRET: ci-test-secret
           JWT_EXPIRES_IN: 24h
-  deploy:
-    name: Deploy to Railway
-    runs-on: ubuntu-latest
-    needs: e2e
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      - name: Deploy to Railway
-        run: railway up --detach --service 7ff5a178-2c4b-4c8e-ac4e-bb7898e9d9bf
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
