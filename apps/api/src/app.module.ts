@@ -11,6 +11,8 @@ import { DecisionModule } from './modules/decision/decision.module';
 import { ActionModule } from './modules/action/action.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ApiKeyModule } from './modules/api-keys/api-key.module';
+import { WebhookModule } from './modules/webhooks/webhook.module';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { AuthModule } from './modules/auth/auth.module';
     ActionModule,
     AuditModule,
     AuthModule,
+    ApiKeyModule,
+    WebhookModule,
   ],
 })
 export class AppModule {}

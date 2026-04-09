@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { EventService } from './event.service';
 import { EventEntity } from './event.entity';
 
@@ -7,6 +9,11 @@ const mockEventRepository = {
   create: jest.fn(),
   save: jest.fn(),
   find: jest.fn(),
+};
+
+const mockCacheManager = {
+  get: jest.fn(),
+  set: jest.fn(),
 };
 
 describe('EventService', () => {
@@ -20,6 +27,10 @@ describe('EventService', () => {
           provide: getRepositoryToken(EventEntity),
           useValue: mockEventRepository,
         },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
+        },
       ],
     }).compile();
 
@@ -32,6 +43,8 @@ describe('EventService', () => {
     const dto = { type: 'LoginFailed', entityId: 'user-123' };
     const entity = { id: 'uuid-1', ...dto };
 
+    mockCacheManager.get.mockResolvedValue(null);
+    mockCacheManager.set.mockResolvedValue(undefined);
     mockEventRepository.create.mockReturnValue(entity);
     mockEventRepository.save.mockResolvedValue(entity);
 
@@ -40,6 +53,40 @@ describe('EventService', () => {
     expect(mockEventRepository.create).toHaveBeenCalledWith(dto);
     expect(mockEventRepository.save).toHaveBeenCalledWith(entity);
     expect(result).toEqual(entity);
+  });
+
+  it('should increment rate limit counter on subsequent events', async () => {
+    const dto = { type: 'LoginFailed', entityId: 'user-123' };
+    const entity = { id: 'uuid-1', ...dto };
+
+    mockCacheManager.get.mockResolvedValue(5);
+    mockCacheManager.set.mockResolvedValue(undefined);
+    mockEventRepository.create.mockReturnValue(entity);
+    mockEventRepository.save.mockResolvedValue(entity);
+
+    const result = await service.create(dto);
+
+    expect(mockCacheManager.set).toHaveBeenCalledWith(
+      'rate:user-123',
+      6,
+      60000,
+    );
+    expect(result).toEqual(entity);
+  });
+
+  it('should throw 429 when rate limit is exceeded', async () => {
+    const dto = { type: 'LoginFailed', entityId: 'user-123' };
+
+    mockCacheManager.get.mockResolvedValue(30);
+
+    await expect(service.create(dto)).rejects.toThrow(
+      new HttpException(
+        'Rate limit exceeded for entity user-123',
+        HttpStatus.TOO_MANY_REQUESTS,
+      ),
+    );
+
+    expect(mockEventRepository.save).not.toHaveBeenCalled();
   });
 
   it('should return all events ordered by createdAt DESC', async () => {

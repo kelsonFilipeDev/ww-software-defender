@@ -44,4 +44,11 @@ export const stateService = {
   },
 };
 
+export const riskService = {
+  getByEntityId: async (entityId: string) => {
+    const { data } = await api.get(`/risk/${entityId}`);
+    return data;
+  },
+};
+
 export default api;

@@ -18,7 +18,7 @@ export default function BootScreen({ onComplete }: { onComplete: () => void }) {
     let i = 0;
     const interval = setInterval(() => {
       if (i < lines.length) {
-        setVisibleLines((prev) => [...prev, lines[i]]);
+        setVisibleLines((prev) => [...prev, lines[i] ?? '']);
         i++;
       } else {
         clearInterval(interval);
