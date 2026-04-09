@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.railway.app/railway-schema.json",
+  "services": {
+    "api": {
+      "buildCommand": "docker build -f apps/api/Dockerfile -t api .",
+      "startCommand": "node dist/main.js",
+      "healthcheckPath": "/api/auth/token"
+    },
+    "web": {
+      "buildCommand": "docker build -f apps/web/Dockerfile -t web .",
+      "startCommand": "next start -p 3000"
+    }
+  }
+}
