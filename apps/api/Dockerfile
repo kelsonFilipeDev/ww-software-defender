@@ -3,16 +3,17 @@ WORKDIR /app
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY packages/ ./packages/
-RUN npm ci --workspace=apps/api --include-workspace-root
+RUN npm ci
 
 FROM base AS build
 COPY apps/api/ ./apps/api/
-RUN npm run build --workspace=apps/api
+RUN cd apps/api && npx tsc -p tsconfig.build.json
 
 FROM node:22-alpine AS production
 WORKDIR /app
-COPY --from=build /app/apps/api/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=build /app/apps/api/dist ./dist
 COPY --from=build /app/apps/api/package.json ./package.json
 EXPOSE 3001
 CMD ["node", "dist/main.js"]
