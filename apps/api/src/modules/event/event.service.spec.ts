@@ -66,7 +66,11 @@ describe('EventService', () => {
 
     const result = await service.create(dto);
 
-    expect(mockCacheManager.set).toHaveBeenCalledWith('rate:user-123', 6, 60000);
+    expect(mockCacheManager.set).toHaveBeenCalledWith(
+      'rate:user-123',
+      6,
+      60000,
+    );
     expect(result).toEqual(entity);
   });
 

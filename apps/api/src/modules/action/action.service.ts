@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DecisionService } from '../decision/decision.service';
 import { DecisionAction } from '../decision/enums/decision-action.enum';
 import { AuditService } from '../audit/audit.service';
+import { WebhookService } from '../webhooks/webhook.service';
 import { ActionStatus } from './enums/action-status.enum';
 import { ActionResultDto } from './dto/action-result.dto';
 
@@ -12,6 +13,7 @@ export class ActionService {
   constructor(
     private readonly decisionService: DecisionService,
     private readonly auditService: AuditService,
+    private readonly webhookService: WebhookService,
   ) {}
 
   async execute(entityId: string): Promise<ActionResultDto> {
@@ -27,6 +29,15 @@ export class ActionService {
       action,
       status: ActionStatus.EXECUTED,
     });
+
+    if (action === DecisionAction.BLOCK) {
+      await this.webhookService.deliver({
+        event: 'entity.blocked',
+        entityId,
+        score,
+        timestamp: new Date(),
+      });
+    }
 
     return {
       entityId,
