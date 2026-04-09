@@ -44,7 +44,12 @@ describe('WebhookService', () => {
 
   it('should return all webhooks ordered by createdAt DESC', async () => {
     const webhooks = [
-      { id: 'uuid-1', url: 'https://example.com/hook', clientId: 'client-123', active: true },
+      {
+        id: 'uuid-1',
+        url: 'https://example.com/hook',
+        clientId: 'client-123',
+        active: true,
+      },
     ];
     mockWebhookRepository.find.mockResolvedValue(webhooks);
 
@@ -58,7 +63,13 @@ describe('WebhookService', () => {
 
   it('should deliver payload to all active webhooks', async () => {
     const webhooks = [
-      { id: 'uuid-1', url: 'https://example.com/hook', clientId: 'client-123', active: true, secret: null },
+      {
+        id: 'uuid-1',
+        url: 'https://example.com/hook',
+        clientId: 'client-123',
+        active: true,
+        secret: null,
+      },
     ];
     mockWebhookRepository.find.mockResolvedValue(webhooks);
 
@@ -98,7 +109,13 @@ describe('WebhookService', () => {
 
   it('should retry up to 3 times on delivery failure', async () => {
     const webhooks = [
-      { id: 'uuid-1', url: 'https://example.com/hook', clientId: 'client-123', active: true, secret: null },
+      {
+        id: 'uuid-1',
+        url: 'https://example.com/hook',
+        clientId: 'client-123',
+        active: true,
+        secret: null,
+      },
     ];
     mockWebhookRepository.find.mockResolvedValue(webhooks);
     global.fetch = jest.fn().mockRejectedValue(new Error('Connection refused'));
