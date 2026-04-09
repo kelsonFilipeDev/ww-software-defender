@@ -1,9 +1,9 @@
-# Sprint 12 — API Keys for External Systems
+# Sprint 12 — API Keys para Sistemas Externos
 
-## Objective
-Allow external systems to authenticate with persistent API Keys instead of JWT tokens generated on demand.
+## Objectivo
+Permitir que sistemas externos se autentiquem com API Keys persistentes em vez de tokens JWT gerados na hora.
 
-## Structure
+## Estrutura
 modules/api-keys/
 ├── dto/
 │   └── create-api-key.dto.ts
@@ -17,44 +17,44 @@ modules/auth/strategies/
 shared/guards/
 └── combined-auth.guard.ts
 
-## Entity
-Table: `api_keys`
+## Entidade
+Tabela: `api_keys`
 
-| Field     | Type      | Description                        |
-|-----------|-----------|------------------------------------|
-| id        | uuid      | Unique identifier                  |
-| key       | string    | SHA-256 hashed key (unique)        |
-| clientId  | string    | Associated client                  |
-| active    | boolean   | Whether the key is active          |
-| createdAt | timestamp | Creation date (automatic)          |
+| Campo     | Tipo      | Descrição                              |
+|-----------|-----------|----------------------------------------|
+| id        | uuid      | Identificador único                    |
+| key       | string    | Chave em SHA-256 (única)               |
+| clientId  | string    | Cliente associado                      |
+| active    | boolean   | Se a chave está activa                 |
+| createdAt | timestamp | Data de criação (automática)           |
 
 ## API
-| Method | Route            | Description         |
-|--------|------------------|---------------------|
-| POST   | /api/keys        | Create new API Key  |
-| DELETE | /api/keys/:id    | Revoke API Key      |
+| Método | Rota             | Descrição              |
+|--------|------------------|------------------------|
+| POST   | /api/keys        | Criar nova API Key     |
+| DELETE | /api/keys/:id    | Revogar API Key        |
 
-## Authentication Flow
-- External system sends `x-api-key: <raw_key>` header
-- `ApiKeyStrategy` hashes the raw key with SHA-256 and looks up in database
-- `CombinedAuthGuard` accepts either JWT (`Authorization: Bearer`) or API Key (`x-api-key`)
-- Raw key is only returned once at creation — never stored in plain text
+## Fluxo de Autenticação
+- Sistema externo envia header `x-api-key: <raw_key>`
+- `ApiKeyStrategy` faz hash SHA-256 da chave e consulta a base de dados
+- `CombinedAuthGuard` aceita JWT (`Authorization: Bearer`) ou API Key (`x-api-key`)
+- A chave em texto claro é retornada apenas uma vez na criação — nunca armazenada
 
-## Security
-- Keys are stored as SHA-256 hashes — never in plain text
-- Revocation sets `active = false` — key is immediately invalidated
-- `CombinedAuthGuard` replaces `JwtAuthGuard` where external access is needed
+## Segurança
+- Chaves armazenadas como SHA-256 — nunca em texto claro
+- Revogação define `active = false` — chave invalidada imediatamente
+- `CombinedAuthGuard` substitui `JwtAuthGuard` onde acesso externo é necessário
 
-## Tests
-- 5 unit tests in `ApiKeyService`
-  - Create key and return raw key
-  - Validate invalid key returns null
-  - Validate valid key returns entity
-  - Revoke existing key
-  - Revoke non-existent key throws NotFoundException
+## Testes
+- 5 testes unitários no `ApiKeyService`
+  - Criar chave e retornar chave em texto claro
+  - Validar chave inválida retorna null
+  - Validar chave válida retorna entidade
+  - Revogar chave existente
+  - Revogar chave inexistente lança NotFoundException
 
-## Technical Decisions
-- `passport-custom` used for API Key Passport strategy
-- SHA-256 hashing via Node.js native `crypto` module — no extra dependencies
-- Raw key generated with `randomBytes(32)` — 64 hex characters
-- Migration generated via TypeORM CLI — `synchronize: false` respected
+## Decisões Técnicas
+- `passport-custom` usado para a Passport strategy de API Key
+- Hash SHA-256 via módulo nativo `crypto` do Node.js — sem dependências extra
+- Chave gerada com `randomBytes(32)` — 64 caracteres hexadecimais
+- Migration gerada via TypeORM CLI — `synchronize: false` respeitado
