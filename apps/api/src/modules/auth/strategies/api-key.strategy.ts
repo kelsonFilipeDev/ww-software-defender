@@ -1,11 +1,20 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-custom';
 import { Request } from 'express';
 import { ApiKeyService } from '../../api-keys/api-key.service';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
+const passportCustom = require('passport-custom');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+const CustomStrategy = passportCustom.Strategy as new () => {
+  authenticate: () => void;
+};
+
 @Injectable()
-export class ApiKeyStrategy extends PassportStrategy(Strategy, 'api-key') {
+export class ApiKeyStrategy extends PassportStrategy(
+  CustomStrategy,
+  'api-key',
+) {
   constructor(private readonly apiKeyService: ApiKeyService) {
     super();
   }
