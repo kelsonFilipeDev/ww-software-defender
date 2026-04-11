@@ -16,4 +16,4 @@ COPY --from=build /app/apps/api/dist ./dist
 COPY --from=build /app/apps/api/src/infrastructure/database ./src/infrastructure/database
 COPY --from=build /app/apps/api/package.json ./package.json
 EXPOSE 3001
-CMD ["sh", "-c", "npm run migration:run:prod && node dist/main.js"]
+CMD ["sh", "-c", "node apps/api/node_modules/.bin/typeorm migration:run -d dist/infrastructure/database/data-source.js && node dist/main.js"]
