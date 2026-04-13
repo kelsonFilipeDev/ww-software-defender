@@ -22,13 +22,13 @@ Em vez de apenas registar alertas, o sistema **fecha o ciclo completo**: deteta 
 
 ### Demonstração
 
-![Dashboard Overview](screenshots/dashboard.png)  
+![Dashboard Overview](screenshots/ww-software-defender-dashboard.png)  
 *Dashboard principal com KPIs, timeline de risco e logs em tempo real*
 
-![Events Stream](screenshots/events-stream.png)  
+![Events Stream](screenshots/ww-software-defender-events-stream.png)  
 *Stream de eventos com filtro e auto-refresh a cada 30 segundos*
 
-![Audit Trail](screenshots/audit-trail.png)  
+![Audit Trail](screenshots/ww-software-defender-audit-trail.png)  
 *Trail forense completo com rastreabilidade total das decisões*
 
 ## Guia de Início Rápido (Getting Started)
