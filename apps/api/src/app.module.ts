@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottlerModule } from '@nestjs/throttler';
 import KeyvRedis from '@keyv/redis';
+import { JwtModule } from '@nestjs/jwt';
 import { EventModule } from './modules/event/event.module';
 import { RiskModule } from './modules/risk/risk.module';
 import { StateModule } from './modules/state/state.module';
@@ -55,6 +56,13 @@ import { TenantMiddleware } from './common/tenant-context/tenant.middleware';
         ],
       }),
     }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET') as string,
+      }),
+    }),
     TenantsModule,
     TenantContextModule,
     EventModule,
@@ -70,6 +78,6 @@ import { TenantMiddleware } from './common/tenant-context/tenant.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(TenantMiddleware).exclude('auth/(.*)').forRoutes('*');
+    consumer.apply(TenantMiddleware).exclude('auth/*path').forRoutes('*path');
   }
 }
