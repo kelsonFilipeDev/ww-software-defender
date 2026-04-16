@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
@@ -13,6 +13,9 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ApiKeyModule } from './modules/api-keys/api-key.module';
 import { WebhookModule } from './modules/webhooks/webhook.module';
+import { TenantsModule } from './modules/tenants/tenants.module';
+import { TenantContextModule } from './common/tenant-context/tenant-context.module';
+import { TenantMiddleware } from './common/tenant-context/tenant.middleware';
 
 @Module({
   imports: [
@@ -52,6 +55,8 @@ import { WebhookModule } from './modules/webhooks/webhook.module';
         ],
       }),
     }),
+    TenantsModule,
+    TenantContextModule,
     EventModule,
     RiskModule,
     StateModule,
@@ -63,4 +68,8 @@ import { WebhookModule } from './modules/webhooks/webhook.module';
     WebhookModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(TenantMiddleware).exclude('auth/(.*)').forRoutes('*');
+  }
+}
