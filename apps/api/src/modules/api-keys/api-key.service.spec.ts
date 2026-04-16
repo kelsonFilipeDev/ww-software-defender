@@ -30,14 +30,13 @@ describe('ApiKeyService', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('should create an api key and return the raw key', async () => {
-    const dto = { clientId: 'client-123' };
+    const dto = { tenantId: 'uuid-tenant-1', name: 'Test Key' };
     const saved = {
       id: 'uuid-1',
       key: 'hashed',
-      clientId: 'client-123',
+      tenantId: 'uuid-tenant-1',
       active: true,
     };
-
     mockApiKeyRepository.create.mockReturnValue(saved);
     mockApiKeyRepository.save.mockResolvedValue(saved);
 
@@ -46,7 +45,7 @@ describe('ApiKeyService', () => {
     expect(mockApiKeyRepository.create).toHaveBeenCalled();
     expect(mockApiKeyRepository.save).toHaveBeenCalled();
     expect(result).toHaveProperty('id', 'uuid-1');
-    expect(result).toHaveProperty('clientId', 'client-123');
+    expect(result).toHaveProperty('tenantId', 'uuid-tenant-1');
     expect(result).toHaveProperty('key');
     expect(typeof result.key).toBe('string');
     expect(result.key).toHaveLength(64);
@@ -54,23 +53,19 @@ describe('ApiKeyService', () => {
 
   it('should return null when validating an invalid key', async () => {
     mockApiKeyRepository.findOne.mockResolvedValue(null);
-
     const result = await service.validate('invalid-key');
-
     expect(result).toBeNull();
   });
 
   it('should return the api key when validating a valid key', async () => {
-    const apiKey = { id: 'uuid-1', clientId: 'client-123', active: true };
+    const apiKey = { id: 'uuid-1', tenantId: 'uuid-tenant-1', active: true };
     mockApiKeyRepository.findOne.mockResolvedValue(apiKey);
-
     const result = await service.validate('valid-raw-key');
-
     expect(result).toEqual(apiKey);
   });
 
   it('should revoke an existing api key', async () => {
-    const apiKey = { id: 'uuid-1', clientId: 'client-123', active: true };
+    const apiKey = { id: 'uuid-1', tenantId: 'uuid-tenant-1', active: true };
     mockApiKeyRepository.findOne.mockResolvedValue(apiKey);
     mockApiKeyRepository.save.mockResolvedValue({ ...apiKey, active: false });
 
@@ -84,7 +79,6 @@ describe('ApiKeyService', () => {
 
   it('should throw NotFoundException when revoking a non-existent key', async () => {
     mockApiKeyRepository.findOne.mockResolvedValue(null);
-
     await expect(service.revoke('non-existent-id')).rejects.toThrow(
       NotFoundException,
     );

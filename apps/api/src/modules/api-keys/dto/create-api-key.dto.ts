@@ -1,7 +1,11 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateApiKeyDto {
+  @IsUUID()
+  @IsNotEmpty()
+  tenantId: string;
+
   @IsString()
   @IsNotEmpty()
-  clientId: string;
+  name: string;
 }
