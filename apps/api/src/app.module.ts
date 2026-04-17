@@ -40,6 +40,7 @@ import { TenantMiddleware } from './common/tenant-context/tenant.middleware';
         username: config.get<string>('DB_USER'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
+        schema: 'tenant_default',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
       }),
