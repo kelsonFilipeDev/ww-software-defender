@@ -1,11 +1,15 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { IsString, IsNotEmpty } from 'class-validator';
+import { AuthService } from './auth.service';
 
 export class GenerateTokenDto {
   @IsString()
   @IsNotEmpty()
   clientId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  apiKey: string;
 }
 
 @Controller('auth')
@@ -14,6 +18,6 @@ export class AuthController {
 
   @Post('token')
   generateToken(@Body() dto: GenerateTokenDto) {
-    return this.authService.generateToken(dto.clientId);
+    return this.authService.generateToken(dto.clientId, dto.apiKey);
   }
 }

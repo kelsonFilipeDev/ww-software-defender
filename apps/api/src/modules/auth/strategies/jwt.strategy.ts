@@ -5,7 +5,9 @@ import { ConfigService } from '@nestjs/config';
 
 export interface JwtPayload {
   sub: string;
-  clientId: string;
+  tenantId: string;
+  tenantSlug: string;
+  schemaName: string;
 }
 
 @Injectable()

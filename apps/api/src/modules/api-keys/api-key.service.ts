@@ -14,26 +14,23 @@ export class ApiKeyService {
 
   async create(
     dto: CreateApiKeyDto,
-  ): Promise<{ id: string; key: string; clientId: string }> {
+  ): Promise<{ id: string; key: string; tenantId: string }> {
     const rawKey = randomBytes(32).toString('hex');
     const hashed = createHash('sha256').update(rawKey).digest('hex');
-
     const apiKey = this.apiKeyRepository.create({
       key: hashed,
-      clientId: dto.clientId,
+      tenantId: dto.tenantId,
       active: true,
     });
-
     await this.apiKeyRepository.save(apiKey);
-
-    return { id: apiKey.id, key: rawKey, clientId: apiKey.clientId };
+    return { id: apiKey.id, key: rawKey, tenantId: apiKey.tenantId };
   }
 
-  async validate(rawKey: string): Promise<ApiKey | null> {
+  async validate(rawKey: string, tenantId?: string): Promise<ApiKey | null> {
     const hashed = createHash('sha256').update(rawKey).digest('hex');
-    const apiKey = await this.apiKeyRepository.findOne({
-      where: { key: hashed, active: true },
-    });
+    const where: Record<string, unknown> = { key: hashed, active: true };
+    if (tenantId) where['tenantId'] = tenantId;
+    const apiKey = await this.apiKeyRepository.findOne({ where });
     return apiKey ?? null;
   }
 

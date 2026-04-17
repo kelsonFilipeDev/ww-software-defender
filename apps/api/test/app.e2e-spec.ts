@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
+import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module';
+import { seedTestTenant, TenantSeed } from './helpers/tenant-seed.helper';
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 interface TokenResponse {
@@ -37,6 +39,7 @@ interface AuditResponse {
 describe('WW Defender — E2E Flow', () => {
   let app: INestApplication;
   let token: string;
+  let seed: TenantSeed;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -53,6 +56,17 @@ describe('WW Defender — E2E Flow', () => {
       }),
     );
     await app.init();
+
+    // Seed tenant + API Key
+    const dataSource = app.get(DataSource);
+    seed = await seedTestTenant(dataSource);
+
+    // Obter JWT
+    const res = await request(app.getHttpServer())
+      .post('/api/auth/token')
+      .send({ clientId: seed.slug, apiKey: seed.rawApiKey })
+      .expect(201);
+    token = (res.body as TokenResponse).accessToken;
   });
 
   afterAll(async () => {
@@ -63,11 +77,10 @@ describe('WW Defender — E2E Flow', () => {
     it('should generate a JWT token', async () => {
       const res = await request(app.getHttpServer())
         .post('/api/auth/token')
-        .send({ clientId: 'e2e-test-client' })
+        .send({ clientId: seed.slug, apiKey: seed.rawApiKey })
         .expect(201);
       const body = res.body as TokenResponse;
       expect(body.accessToken).toBeDefined();
-      token = body.accessToken;
     });
 
     it('should reject empty clientId', async () => {
@@ -115,6 +128,7 @@ describe('WW Defender — E2E Flow', () => {
     it('should calculate risk score for entity', async () => {
       const res = await request(app.getHttpServer())
         .get('/api/risk/e2e-user')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
       const body = res.body as RiskResponse;
       expect(body.entityId).toBe('e2e-user');
@@ -126,6 +140,7 @@ describe('WW Defender — E2E Flow', () => {
     it('should return state based on risk score', async () => {
       const res = await request(app.getHttpServer())
         .get('/api/state/e2e-user')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
       const body = res.body as StateResponse;
       expect(body.entityId).toBe('e2e-user');
@@ -143,6 +158,7 @@ describe('WW Defender — E2E Flow', () => {
     it('should return decision based on state', async () => {
       const res = await request(app.getHttpServer())
         .get('/api/decision/e2e-user')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
       const body = res.body as DecisionResponse;
       expect(body.entityId).toBe('e2e-user');

@@ -3,7 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Tenant } from '../tenants/tenant.entity';
 
 @Entity('api_keys')
 export class ApiKey {
@@ -14,7 +17,11 @@ export class ApiKey {
   key: string;
 
   @Column()
-  clientId: string;
+  tenantId: string;
+
+  @ManyToOne(() => Tenant, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'tenantId' })
+  tenant: Tenant;
 
   @Column({ default: true })
   active: boolean;

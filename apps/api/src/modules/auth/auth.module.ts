@@ -9,11 +9,13 @@ import { CombinedAuthGuard } from '../../shared/guards/combined-auth.guard';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ApiKeyModule } from '../api-keys/api-key.module';
+import { TenantsModule } from '../tenants/tenants.module';
 
 @Module({
   imports: [
     PassportModule,
     ApiKeyModule,
+    TenantsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

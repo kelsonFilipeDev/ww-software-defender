@@ -19,13 +19,11 @@ export class ApiKeyStrategy extends PassportStrategy(
     super();
   }
 
-  async validate(req: Request): Promise<{ clientId: string }> {
+  async validate(req: Request): Promise<{ tenantId: string }> {
     const rawKey = req.headers['x-api-key'] as string;
     if (!rawKey) throw new UnauthorizedException('API Key missing');
-
     const apiKey = await this.apiKeyService.validate(rawKey);
     if (!apiKey) throw new UnauthorizedException('Invalid or inactive API Key');
-
-    return { clientId: apiKey.clientId };
+    return { tenantId: apiKey.tenantId };
   }
 }

@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottlerModule } from '@nestjs/throttler';
 import KeyvRedis from '@keyv/redis';
+import { JwtModule } from '@nestjs/jwt';
 import { EventModule } from './modules/event/event.module';
 import { RiskModule } from './modules/risk/risk.module';
 import { StateModule } from './modules/state/state.module';
@@ -13,6 +14,9 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ApiKeyModule } from './modules/api-keys/api-key.module';
 import { WebhookModule } from './modules/webhooks/webhook.module';
+import { TenantsModule } from './modules/tenants/tenants.module';
+import { TenantContextModule } from './common/tenant-context/tenant-context.module';
+import { TenantMiddleware } from './common/tenant-context/tenant.middleware';
 
 @Module({
   imports: [
@@ -36,6 +40,7 @@ import { WebhookModule } from './modules/webhooks/webhook.module';
         username: config.get<string>('DB_USER'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
+        schema: 'tenant_default',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
       }),
@@ -52,6 +57,15 @@ import { WebhookModule } from './modules/webhooks/webhook.module';
         ],
       }),
     }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET') as string,
+      }),
+    }),
+    TenantsModule,
+    TenantContextModule,
     EventModule,
     RiskModule,
     StateModule,
@@ -63,4 +77,8 @@ import { WebhookModule } from './modules/webhooks/webhook.module';
     WebhookModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(TenantMiddleware).exclude('auth/*path').forRoutes('*path');
+  }
+}
