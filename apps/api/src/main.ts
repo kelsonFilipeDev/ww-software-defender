@@ -12,11 +12,14 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  
   app.enableCors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: process.env.CORS_ORIGIN ?? 'http://localhost:3000',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id'],
+    credentials: true,
   });
+  
   await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
 }
 
