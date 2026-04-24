@@ -30,7 +30,10 @@ export default function AuditPage() {
     if (!silent) setLoading(true);
     else setRefreshing(true);
     try {
-      const token = await authService.getToken('dashboard');
+      const token = await authService.getToken(
+        process.env.NEXT_PUBLIC_API_CLIENT_ID!,
+        process.env.NEXT_PUBLIC_API_KEY!,
+      );
       setAuthToken(token);
       const data = await auditService.getAll();
       setLogs(data);

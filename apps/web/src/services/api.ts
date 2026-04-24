@@ -9,8 +9,8 @@ export const setAuthToken = (token: string) => {
 };
 
 export const authService = {
-  getToken: async (clientId: string) => {
-    const { data } = await api.post('/auth/token', { clientId });
+  getToken: async (clientId: string, apiKey: string) => {
+    const { data } = await api.post('/auth/token', { clientId, apiKey });
     return data.accessToken as string;
   },
 };
