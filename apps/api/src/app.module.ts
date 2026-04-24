@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
@@ -79,6 +79,9 @@ import { TenantMiddleware } from './common/tenant-context/tenant.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(TenantMiddleware).exclude('auth/*path').forRoutes('*path');
+    consumer
+    .apply(TenantMiddleware)
+    .exclude({ path: 'auth/token', method: RequestMethod.POST })
+    .forRoutes('*path');
   }
 }
